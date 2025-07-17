@@ -14,7 +14,7 @@ export function useGeminiAPI(config: GeminiConfig) {
     setError(null);
 
     try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-1.5-flash'}:generateContent?key=${config.apiKey}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-2.0-flash-exp'}:generateContent?key=${config.apiKey}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
