@@ -21,28 +21,79 @@ export type Database = {
           created_at: string | null
           id: number
           image_url: string | null
-          is_ai: boolean | null
+          is_ai: boolean
           title: string | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           content: string
           conversation_id?: string | null
           created_at?: string | null
-          id?: number
+          id?: never
           image_url?: string | null
-          is_ai?: boolean | null
+          is_ai?: boolean
           title?: string | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           content?: string
           conversation_id?: string | null
           created_at?: string | null
-          id?: number
+          id?: never
           image_url?: string | null
-          is_ai?: boolean | null
+          is_ai?: boolean
           title?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      todos: {
+        Row: {
+          id: number
+          inserted_at: string
+          is_complete: boolean | null
+          task: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: number
+          inserted_at?: string
+          is_complete?: boolean | null
+          task?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: number
+          inserted_at?: string
+          is_complete?: boolean | null
+          task?: string | null
           user_id?: string
         }
         Relationships: []
