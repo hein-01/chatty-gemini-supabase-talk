@@ -1,45 +1,45 @@
 import { useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
-interface GeminiConfig {
-  apiKey: string;
-  model?: string;
-}
-
-export function useGeminiAPI(config: GeminiConfig) {
+export function useGeminiAPI() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const sendMessage = async (message: string): Promise<string> => {
+  const sendMessage = async (message: string, image?: string): Promise<string> => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-2.0-flash-exp'}:generateContent?key=${config.apiKey}`, {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        throw new Error('User not authenticated');
+      }
+
+      const response = await fetch(`https://ohqnzfwioffaqyhemkgv.functions.supabase.co/functions/v1/gemini-chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: message
-            }]
-          }]
+          message,
+          image
         }),
       });
 
       if (!response.ok) {
-        throw new Error(`API request failed: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || `API request failed: ${response.status}`);
       }
 
       const data = await response.json();
-      const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-      if (!generatedText) {
+      
+      if (!data.generatedText) {
         throw new Error('No response generated');
       }
 
-      return generatedText;
+      return data.generatedText;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       setError(errorMessage);

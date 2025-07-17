@@ -35,7 +35,7 @@ const ModernChatBot: React.FC<ModernChatBotProps> = ({ apiKey }) => {
 
   const { user, signOut } = useAuth();
   const { messages, loading: historyLoading, saveMessage, clearHistory } = useChatHistory(user?.id);
-  const { sendMessage, isLoading } = useGeminiAPI({ apiKey, model: 'gemini-pro' });
+  const { sendMessage, isLoading } = useGeminiAPI();
   const { isListening, transcript, startListening, stopListening, resetTranscript } = useVoiceInput();
   const { toast } = useToast();
 
@@ -98,7 +98,7 @@ const ModernChatBot: React.FC<ModernChatBotProps> = ({ apiKey }) => {
       resetTranscript();
 
       // Send to Gemini API
-      const response = await sendMessage(userMessage);
+      const response = await sendMessage(userMessage, imagePreview || undefined);
       
       // Save AI response
       await saveMessage(response, true);
